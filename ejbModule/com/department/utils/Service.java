@@ -1,4 +1,5 @@
-package departement.util;
+package com.department.utils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public abstract class Service<E> {
 	 *             if the operation field if exists or something
 	 */
 	public void create(E object) throws Exception {
+		em.clear();
 		em.persist(object);
 		em.flush();
 	}
@@ -78,7 +80,7 @@ public abstract class Service<E> {
 	@SuppressWarnings("unchecked")
 	public List<E> findAll(String orderBy) {
 		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery("select e from " + entityClass.getName() +   orderBy)
+		return em.createQuery("select e from " + entityClass.getName() + " e " + orderBy)
 				.getResultList();
 	}
 
