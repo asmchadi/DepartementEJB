@@ -31,7 +31,7 @@ public abstract class Service<E> {
 	}
 
 	/**
-	 * Update element or create a new one if its not in the database
+	 * Update element or create a new one if it's not in the database
 	 * 
 	 * @param object
 	 *            instance of the element to update or create
