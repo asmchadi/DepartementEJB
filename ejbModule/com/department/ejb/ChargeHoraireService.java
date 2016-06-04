@@ -2,7 +2,7 @@ package com.department.ejb;
 
 import javax.ejb.Stateless;
 
-import com.department.entities.Cours;
+import com.department.entities.ChargeHoraire;
 import com.department.utils.Service;
 
 /**
@@ -10,13 +10,13 @@ import com.department.utils.Service;
  */
 
 @Stateless 
-public class ChargeHoraireService extends Service<Cours> {
+public class ChargeHoraireService extends Service<ChargeHoraire> {
 	
     /**
      * Default constructor. 
      */
     public ChargeHoraireService() {
-    	super(Cours.class);
+    	super(ChargeHoraire.class);
     }
 
 }
