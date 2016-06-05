@@ -2,7 +2,7 @@ package com.department.ejb;
 
 import javax.ejb.Stateless;
 
-import com.department.entities.Cours;
+import com.department.entities.BonusParticipant;
 import com.department.utils.Service;
 
 /**
@@ -10,13 +10,13 @@ import com.department.utils.Service;
  */
 
 @Stateless 
-public class BonusParticipantService extends Service<Cours> {
+public class BonusParticipantService extends Service<BonusParticipant> {
 	
     /**
      * Default constructor. 
      */
     public BonusParticipantService() {
-    	super(Cours.class);
+    	super(BonusParticipant.class);
     }
 
 }
