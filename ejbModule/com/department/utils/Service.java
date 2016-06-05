@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 
 public abstract class Service<E> {
 
-	@PersistenceContext(name = "TestJPA")
+	@PersistenceContext
 	protected EntityManager em;
 	private Class<E> entityClass;
 
@@ -31,7 +31,7 @@ public abstract class Service<E> {
 	}
 
 	/**
-	 * Update element or create a new one if it's not in the database
+	 * Update element or create a new one if its not in the database
 	 * 
 	 * @param object
 	 *            instance of the element to update or create
@@ -80,7 +80,9 @@ public abstract class Service<E> {
 	@SuppressWarnings("unchecked")
 	public List<E> findAll(String orderBy) {
 		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery("select e from " + entityClass.getName() + " e " + orderBy)
+		String sql = "select e from " + entityClass.getName() + " e " + orderBy;
+		System.out.println("Query : " + sql);
+		return em.createQuery(sql)
 				.getResultList();
 	}
 
@@ -100,9 +102,10 @@ public abstract class Service<E> {
 	@SuppressWarnings("unchecked")
 	public List<E> findByField(String field, Object value, String orderBy) {
 		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery(
-				"select e from " + entityClass.getName() + " e where " + field
-						+ " like '" + value + "'" +   orderBy).getResultList();
+		String sql = "select e from " + entityClass.getName() + " e where " + field
+				+ " like '" + value + "'" +   orderBy;
+		System.out.println("Query : " + sql);
+		return em.createQuery(sql).getResultList();
 	}
 
 	/**
@@ -125,9 +128,10 @@ public abstract class Service<E> {
 			args += k + " like '" + params.get(k) + "' and ";
 		}
 		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery(
-				"select e from " + entityClass.getName() + " e where "
-						+ args.substring(0, args.length() - 4) +  orderBy).getResultList();
+		String sql = "select e from " + entityClass.getName() + " e where "
+				+ args.substring(0, args.length() - 4) +  orderBy;
+		System.out.println("Query : " + sql);
+		return em.createQuery(sql).getResultList();
 	}
 
 	/**
@@ -143,8 +147,9 @@ public abstract class Service<E> {
 	@SuppressWarnings("unchecked")
 	public List<E> findByWhere(String where, String orderBy) {
 		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery(
-				"select e from " + entityClass.getName() + " e where " + where + orderBy).getResultList();
+		String sql = "select e from " + entityClass.getName() + " e where " + where + orderBy;
+		System.out.println("Query : " + sql);
+		return em.createQuery(sql).getResultList();
 	}
 
 	/**
@@ -158,6 +163,7 @@ public abstract class Service<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<E> findByQuery(String query) {
+		System.out.println("Query : " + query);
 		return em.createQuery(query).getResultList();
 	}
 
@@ -171,6 +177,7 @@ public abstract class Service<E> {
 	 *             if the query string is found to be invalid
 	 */
 	public Integer updateQuery(String query) throws Exception {
+		System.out.println("Query : " + query);
 		return em.createQuery(query).executeUpdate();
 	}
 
