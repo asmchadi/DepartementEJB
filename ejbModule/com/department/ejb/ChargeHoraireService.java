@@ -18,5 +18,12 @@ public class ChargeHoraireService extends Service<ChargeHoraire> {
     public ChargeHoraireService() {
     	super(ChargeHoraire.class);
     }
+    
+    public ChargeHoraire getCurrentChargeHoraire(){
+    	return this.findById(new Long(1));
+    }
+    
+   
 
+    
 }
