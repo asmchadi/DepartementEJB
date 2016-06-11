@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+
+import com.department.entities.ChargeHoraire;
 
 public abstract class Service<E> {
 
-	@PersistenceContext(name = "TestJPA")
+	@PersistenceContext
 	protected EntityManager em;
 	private Class<E> entityClass;
 
@@ -69,19 +72,34 @@ public abstract class Service<E> {
 		return (E) em.find(entityClass, id);
 	}
 
+	@SuppressWarnings("unchecked")
+	public E findFirst() {
+		try{
+			return (E) em.createQuery(
+					"select e from " + entityClass.getName() + " e ")
+					.getSingleResult();
+		}catch(NoResultException e){
+			return null;
+		}
+		
+	}
+
 	/**
 	 * Function returns all items for the associated entity
 	 * 
-	 * @param orderBy query for order by clause default order if null or empty
+	 * @param orderBy
+	 *            query for order by clause default order if null or empty
 	 * @return List of elements in the table
 	 * @throws Exception
 	 *             if the query string is found to be invalid
 	 */
 	@SuppressWarnings("unchecked")
 	public List<E> findAll(String orderBy) {
-		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery("select e from " + entityClass.getName() + " e " + orderBy)
-				.getResultList();
+		orderBy = orderBy != null && orderBy.length() > 0 ? " order by "
+				+ orderBy : "";
+		String sql = "select e from " + entityClass.getName() + " e " + orderBy;
+		System.out.println("Query : " + sql);
+		return em.createQuery(sql).getResultList();
 	}
 
 	/**
@@ -92,26 +110,30 @@ public abstract class Service<E> {
 	 *            for the name of the column in the database
 	 * @param value
 	 *            represents the value to test for column
-	 * @param orderBy query for order by clause default order if null or empty
+	 * @param orderBy
+	 *            query for order by clause default order if null or empty
 	 * @return List of elements matches the where clause test
 	 * @throws Exception
 	 *             if the query string is found to be invalid
 	 */
 	@SuppressWarnings("unchecked")
 	public List<E> findByField(String field, Object value, String orderBy) {
-		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery(
-				"select e from " + entityClass.getName() + " e where " + field
-						+ " like '" + value + "'" +   orderBy).getResultList();
+		orderBy = orderBy != null && orderBy.length() > 0 ? " order by "
+				+ orderBy : "";
+		String sql = "select e from " + entityClass.getName() + " e where "
+				+ field + " like '" + value + "'" + orderBy;
+		System.out.println("Query : " + sql);
+		return em.createQuery(sql).getResultList();
 	}
 
 	/**
-	 * Using the fields name and the value to test in a "field like 'value' and ..."
-	 * query
+	 * Using the fields name and the value to test in a
+	 * "field like 'value' and ..." query
 	 * 
 	 * @param fields
 	 *            list map<key, value> to test its equality in the where clause
-	 * @param orderBy query for order by clause default order if null or empty
+	 * @param orderBy
+	 *            query for order by clause default order if null or empty
 	 * @return List of elements matches the where clause test
 	 * @throws Exception
 	 *             if the query string is found to be invalid
@@ -120,14 +142,16 @@ public abstract class Service<E> {
 	public List<E> findByFields(Map<String, Object> params, String orderBy) {
 		String args = "";
 		Object[] keys = params.keySet().toArray();
-		for(int i=0; i<params.size();i++){
+		for (int i = 0; i < params.size(); i++) {
 			Object k = keys[i];
 			args += k + " like '" + params.get(k) + "' and ";
 		}
-		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery(
-				"select e from " + entityClass.getName() + " e where "
-						+ args.substring(0, args.length() - 4) +  orderBy).getResultList();
+		orderBy = orderBy != null && orderBy.length() > 0 ? " order by "
+				+ orderBy : "";
+		String sql = "select e from " + entityClass.getName() + " e where "
+				+ args.substring(0, args.length() - 4) + orderBy;
+		System.out.println("Query : " + sql);
+		return em.createQuery(sql).getResultList();
 	}
 
 	/**
@@ -135,16 +159,20 @@ public abstract class Service<E> {
 	 * 
 	 * @param query
 	 *            a Java Persistence query string
-	 * @param orderBy query for order by clause default order if null or empty
+	 * @param orderBy
+	 *            query for order by clause default order if null or empty
 	 * @return list of elements matches the query as list result
 	 * @throws Exception
 	 *             if the query string is found to be invalid
 	 */
 	@SuppressWarnings("unchecked")
 	public List<E> findByWhere(String where, String orderBy) {
-		orderBy = orderBy != null && orderBy.length()>0? " order by "+ orderBy : "";
-		return em.createQuery(
-				"select e from " + entityClass.getName() + " e where " + where + orderBy).getResultList();
+		orderBy = orderBy != null && orderBy.length() > 0 ? " order by "
+				+ orderBy : "";
+		String sql = "select e from " + entityClass.getName() + " e where "
+				+ where + orderBy;
+		System.out.println("Query : " + sql);
+		return em.createQuery(sql).getResultList();
 	}
 
 	/**
@@ -158,6 +186,7 @@ public abstract class Service<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<E> findByQuery(String query) {
+		System.out.println("Query : " + query);
 		return em.createQuery(query).getResultList();
 	}
 
@@ -171,6 +200,7 @@ public abstract class Service<E> {
 	 *             if the query string is found to be invalid
 	 */
 	public Integer updateQuery(String query) throws Exception {
+		System.out.println("Query : " + query);
 		return em.createQuery(query).executeUpdate();
 	}
 
